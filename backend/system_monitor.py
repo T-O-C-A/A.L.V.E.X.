@@ -95,3 +95,15 @@ if __name__ == "__main__":
 
     # Example: Continuously monitor system resources every 10 seconds
     # monitor_system_resources(interval=10)
+
+def get_system_status():
+    """
+    Get the current CPU, memory, and disk usage.
+    Returns a dictionary with the system status.
+    """
+    status = {
+        "cpu_usage": psutil.cpu_percent(),
+        "memory_usage": psutil.virtual_memory().percent,
+        "disk_usage": psutil.disk_usage('/').percent
+    }
+    return status
