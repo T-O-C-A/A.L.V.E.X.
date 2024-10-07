@@ -2,6 +2,8 @@ from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QVBoxLayout, QWid
 from PyQt5.QtCore import Qt, QRect
 import sys
 
+from hand_tracking import check_for_hand_hover
+
 class ALVEXScreen(QWidget):
     def __init__(self):
         super().__init__()

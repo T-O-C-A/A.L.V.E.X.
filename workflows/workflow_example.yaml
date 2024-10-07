@@ -1,0 +1,47 @@
+workflow_name: "Morning Routine"
+
+steps:
+  - action: "open_application"
+    application: "browser"
+    description: "Open the web browser."
+    
+  - action: "wait"
+    duration: 5
+    description: "Wait for 5 seconds to allow the browser to load."
+    
+  - action: "navigate_to"
+    url: "https://mail.example.com"
+    description: "Navigate to the email login page."
+    
+  - action: "login_to_email"
+    username: "your-email@example.com"
+    password: "your-password"  # In practice, use secure methods for storing sensitive data.
+    description: "Log in to the email account."
+    
+  - action: "check_email"
+    description: "Check and list unread emails."
+
+  - action: "wait"
+    duration: 10
+    description: "Wait for 10 seconds before continuing."
+
+  - action: "open_application"
+    application: "calendar"
+    description: "Open the calendar application to check today's events."
+
+  - action: "wait"
+    duration: 5
+    description: "Wait for 5 seconds to allow the calendar to load."
+
+  - action: "check_calendar"
+    description: "List today's calendar events."
+
+  - action: "optimize_memory"
+    description: "Optimize the system's memory after running applications."
+    
+  - action: "clear_cache"
+    description: "Clear system cache to free up resources."
+
+  - action: "display_message"
+    message: "Morning routine is complete."
+    description: "Display a message to indicate that the routine is done."

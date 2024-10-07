@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, json, request, jsonify
 from nlp_processing import process_nlp_input
 from adaptive_learning import automate_command, track_command_usage, analyze_feedback
 from external_screen import ALVEXScreen
@@ -10,6 +10,8 @@ from workflow_templates import execute_workflow, add_custom_workflow
 from cross_platform import control_smart_device, sync_task, get_synced_task, get_device_status
 from security import encrypt_data, decrypt_data, authenticate_user, log_command, save_encrypted_file, load_decrypted_file
 from system_monitor import monitor_cpu_usage, monitor_memory_usage, monitor_disk_usage, suggest_system_optimizations
+import logging
+from datetime import datetime
 import threading
 
 app = Flask(__name__)
@@ -24,6 +26,49 @@ def start_hand_tracking():
 if __name__ == '__main__':
     threading.Thread(target=start_hand_tracking).start()
     app.run(debug=True, port=5000)
+
+    # Configure logging
+logging.basicConfig(
+    filename='logs/system_logs.txt',
+    level=logging.INFO,
+    format='[%(asctime)s] %(levelname)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
+# Log an example command execution
+def execute_command(user, command):
+    logging.info(f"User '{user}' executed command: {command}")
+    # Simulate command execution success
+    logging.info(f"Command '{command}' executed successfully.")
+
+# Log an error during workflow execution
+def execute_workflow(user, workflow_name):
+    logging.info(f"User '{user}' initiated workflow: {workflow_name}")
+    try:
+        # Simulate workflow steps
+        logging.info("Workflow step 1 completed: open_application(browser)")
+        raise TimeoutError("Failed to navigate to email page.")
+    except Exception as e:
+        logging.error(f"Error during workflow '{workflow_name}': {str(e)}")
+    else:
+        logging.info(f"Workflow '{workflow_name}' completed successfully.")
+
+# Log system resource monitoring
+def monitor_system_resources():
+    cpu_usage = 85  # Simulated high CPU usage
+    if cpu_usage > 80:
+        logging.warning(f"High CPU usage detected: {cpu_usage}%")
+
+# Example usage
+if __name__ == "__main__":
+    # Log command execution
+    execute_command('user1', 'open_browser')
+
+    # Log workflow execution
+    execute_workflow('user1', 'Morning Routine')
+
+    # Log system monitoring
+    monitor_system_resources()
 
 @app.route('/execute_command', methods=['POST'])
 def execute_command():
@@ -233,3 +278,37 @@ def suggest_optimizations_route():
         return jsonify({"suggestions": suggestions})
     else:
         return jsonify({"message": suggestions})
+    
+    # Load feedback file
+with open('logs/feedback.json', 'r') as f:
+    feedback_data = json.load(f)
+
+@app.route('/submit_feedback', methods=['POST'])
+def submit_feedback():
+    feedback_type = request.json.get('type')  # 'command' or 'workflow'
+    name = request.json.get('name')  # Name of the command or workflow
+    is_positive = request.json.get('is_positive')  # True or False
+    feedback_message = request.json.get('feedback_message')
+
+    if feedback_type in feedback_data:
+        if name in feedback_data[feedback_type]:
+            if is_positive:
+                feedback_data[feedback_type][name]["positive_feedback"] += 1
+            else:
+                feedback_data[feedback_type][name]["negative_feedback"] += 1
+
+            feedback_data[feedback_type][name]["feedback_messages"].append(feedback_message)
+        else:
+            feedback_data[feedback_type][name] = {
+                "positive_feedback": 1 if is_positive else 0,
+                "negative_feedback": 0 if is_positive else 1,
+                "feedback_messages": [feedback_message]
+            }
+    else:
+        return jsonify({"error": "Invalid feedback type."}), 400
+
+    # Save the updated feedback
+    with open('logs/feedback.json', 'w') as f:
+        json.dump(feedback_data, f, indent=4)
+
+    return jsonify({"response": "Feedback submitted successfully."})
