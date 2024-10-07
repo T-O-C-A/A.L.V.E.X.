@@ -73,4 +73,20 @@ def analyze_feedback(command, success, feedback_message=None):
 
 # Function to suggest improvements based on feedback
 def suggest_improvement(command):
-    """Suggest improvements for commands with
+    """Suggest improvements for commands with negative feedback."""
+    if feedback_data[command]["negative"] > 2:
+        return f"The command '{command}' has received negative feedback multiple times. Would you like to improve or modify this command?"
+    return None
+
+# Function to get user feedback for a command
+def get_feedback(command):
+    """Retrieve feedback data for a specific command."""
+    if command in feedback_data:
+        return feedback_data[command]
+    return f"No feedback available for the command '{command}'."
+
+if __name__ == '__main__':
+    # Example usage
+    print(track_command_usage('open_browser'))
+    print(analyze_feedback('open_browser', success=False, feedback_message="It took too long to open."))
+    print(automate_command('open_browser'))
