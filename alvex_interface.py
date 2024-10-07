@@ -1,12 +1,15 @@
 import sys
+from typing import Self
 import pyttsx3
 import psutil
-from backend.system_monitor import get_system_status  # Import the system monitor
-from backend.workflow_manager import execute_workflow  # Import the backend workflow handler
 import speech_recognition as sr
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QLineEdit, 
                              QTextEdit, QProgressBar, QComboBox, QMessageBox, QCheckBox)
 from PyQt5.QtCore import Qt
+from .backend.command_handler import execute_command  # Import the backend command handler
+from .backend.workflow_manager import execute_workflow  # Import the backend workflow handler
+from .backend.system_monitor import get_system_status, monitor_memory_usage  # Import the system monitor
+
 
 class ALVEXInterface(QWidget):
     def __init__(self):
@@ -231,8 +234,28 @@ class ALVEXInterface(QWidget):
             warning_message = "Please enter your feedback."
             QMessageBox.warning(self, "Input Error", warning_message)
             self.talk(warning_message)
+    
+    # Inside the ALVEXInterface class in alvex_interface.py
+    def execute_command(self):
+        command = self.command_input.text()
+        if command:
+            message = f"Executing command: {command}"
+            QMessageBox.information(self, "Command Execution", message)
+            self.talk(message)  # Speak out the message
+            execute_command('user1', command)  # Call backend function to execute command
+        else:
+            warning_message = "Please enter a command to execute."
+            QMessageBox.warning(self, "Input Error", warning_message)
+            self.talk(warning_message)
 
     # Inside the ALVEXInterface class in alvex_interface.py
+    def execute_workflow(self):
+        workflow = self.workflow_combo.currentText()
+        message = f"Executing workflow: {workflow}"
+        QMessageBox.information(self, "Workflow Execution", message)
+        self.talk(message)  # Speak out the workflow execution
+        execute_workflow('user1', workflow)  # Call backend function to execute workflow
+
     def refresh_system_status(self):
         status = get_system_status()  # Get system status from the backend
         cpu_usage = status['cpu_usage']
@@ -249,19 +272,13 @@ class ALVEXInterface(QWidget):
         self.disk_bar.setValue(disk_usage)
 
     # Speak the system status
-    status_message = (f"Current CPU usage is {cpu_usage} percent. "
-                      f"Memory usage is {memory_usage} percent. "
-                      f"Disk usage is {disk_usage} percent.")
-    self.talk(status_message)
+    status_message = (f"Current CPU usage is {cpu_usage} percent. " # type: ignore
+                      f"Memory usage is {monitor_memory_usage} percent. "
+                      f"Disk usage is {psutil.disk_usage} percent.")
+    Self.talk(status_message)
 
-    def get_system_status():
-    #
-    # Get the current CPU, memory, and disk usage.
-    # Returns a dictionary with the system status.
-    #
-        status = {
-        "cpu_usage": psutil.cpu_percent(),
-        "memory_usage": psutil.virtual_memory().percent,
-        "disk_usage": psutil.disk_usage('/').percent
-        }
-        return status
+# Main Application
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = ALVEXInterface()
+    sys.exit(app.exec_())
