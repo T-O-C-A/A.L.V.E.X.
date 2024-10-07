@@ -1,14 +1,15 @@
 from flask import Flask, request, jsonify
 from nlp_processing import process_nlp_input
-from adaptive_learning import track_command_usage, analyze_feedback
+from adaptive_learning import automate_command, track_command_usage, analyze_feedback
 from external_screen import ALVEXScreen
-from task_scheduler import schedule_task
+from task_scheduler import execute_predefined_command, remove_task, schedule_task
 from ai_prediction import log_user_behavior, predict_next_action
 from hand_tracking import start_hand_tracking_for_buttons
 from user_profiles import update_user_profile, get_user_profile, add_frequent_command, suggest_frequent_commands, clear_user_profile
 from workflow_templates import execute_workflow, add_custom_workflow
 from cross_platform import control_smart_device, sync_task, get_synced_task, get_device_status
 from security import encrypt_data, decrypt_data, authenticate_user, log_command, save_encrypted_file, load_decrypted_file
+from system_monitor import monitor_cpu_usage, monitor_memory_usage, monitor_disk_usage, suggest_system_optimizations
 import threading
 
 app = Flask(__name__)
@@ -208,3 +209,27 @@ def clear_profile_route():
     user = request.json.get('user')
     response = clear_user_profile(user)
     return jsonify({"response": response})
+
+@app.route('/monitor_cpu', methods=['GET'])
+def monitor_cpu_route():
+    cpu_usage = monitor_cpu_usage()
+    return jsonify({"cpu_usage": cpu_usage})
+
+@app.route('/monitor_memory', methods=['GET'])
+def monitor_memory_route():
+    memory_usage = monitor_memory_usage()
+    return jsonify({"memory_usage": memory_usage})
+
+@app.route('/monitor_disk', methods=['GET'])
+def monitor_disk_route():
+    disk = request.args.get('disk', '/')  # Default to root partition
+    disk_usage = monitor_disk_usage(disk)
+    return jsonify({"disk_usage": disk_usage})
+
+@app.route('/suggest_optimizations', methods=['GET'])
+def suggest_optimizations_route():
+    suggestions = suggest_system_optimizations()
+    if isinstance(suggestions, list):
+        return jsonify({"suggestions": suggestions})
+    else:
+        return jsonify({"message": suggestions})
