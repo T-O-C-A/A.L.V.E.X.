@@ -6,6 +6,8 @@ import speech_recognition as sr
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QLineEdit, 
                              QTextEdit, QProgressBar, QComboBox, QMessageBox, QCheckBox)
 from PyQt5.QtCore import Qt
+
+from app import submit_feedback
 from .backend.command_handler import execute_command  # Import the backend command handler
 from .backend.workflow_manager import execute_workflow  # Import the backend workflow handler
 from .backend.system_monitor import get_system_status, monitor_memory_usage  # Import the system monitor
@@ -228,8 +230,7 @@ class ALVEXInterface(QWidget):
             message = "Thank you for your feedback!"
             QMessageBox.information(self, "Feedback Submitted", message)
             self.talk(message)  # Speak out the confirmation
-            # Here you would call the backend function to submit the feedback
-            # Example: submit_feedback('user1', 'command_or_workflow', feedback, is_positive=True/False)
+            submit_feedback('user1', feedback)  # Submit feedback to the backend
         else:
             warning_message = "Please enter your feedback."
             QMessageBox.warning(self, "Input Error", warning_message)
