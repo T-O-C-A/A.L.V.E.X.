@@ -1,6 +1,7 @@
 import sys
 import pyttsx3
 import psutil
+from backend.system_monitor import get_system_status  # Import the system monitor
 import speech_recognition as sr
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QLineEdit, 
                              QTextEdit, QProgressBar, QComboBox, QMessageBox, QCheckBox)
@@ -229,3 +230,25 @@ class ALVEXInterface(QWidget):
             warning_message = "Please enter your feedback."
             QMessageBox.warning(self, "Input Error", warning_message)
             self.talk(warning_message)
+
+# Inside the ALVEXInterface class in alvex_interface.py
+def refresh_system_status(self):
+    status = get_system_status()  # Get system status from the backend
+    cpu_usage = status['cpu_usage']
+    memory_usage = status['memory_usage']
+    disk_usage = status['disk_usage']
+
+    self.cpu_label.setText(f"CPU Usage: {cpu_usage}%")
+    self.cpu_bar.setValue(cpu_usage)
+
+    self.memory_label.setText(f"Memory Usage: {memory_usage}%")
+    self.memory_bar.setValue(memory_usage)
+
+    self.disk_label.setText(f"Disk Usage: {disk_usage}%")
+    self.disk_bar.setValue(disk_usage)
+
+    # Speak the system status
+    status_message = (f"Current CPU usage is {cpu_usage} percent. "
+                      f"Memory usage is {memory_usage} percent. "
+                      f"Disk usage is {disk_usage} percent.")
+    self.talk(status_message)

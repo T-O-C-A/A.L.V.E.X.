@@ -1,18 +1,27 @@
 from flask import Flask, json, request, jsonify
-from nlp_processing import process_nlp_input
-from adaptive_learning import automate_command, track_command_usage, analyze_feedback
+from backend.nlp_processing import process_nlp_input
+from backend.adaptive_learning import automate_command, track_command_usage, analyze_feedback
 from external_screen import ALVEXScreen
-from task_scheduler import execute_predefined_command, remove_task, schedule_task
-from ai_prediction import log_user_behavior, predict_next_action
-from hand_tracking import start_hand_tracking_for_buttons
-from user_profiles import update_user_profile, get_user_profile, add_frequent_command, suggest_frequent_commands, clear_user_profile
-from workflow_templates import execute_workflow, add_custom_workflow
-from cross_platform import control_smart_device, sync_task, get_synced_task, get_device_status
-from security import encrypt_data, decrypt_data, authenticate_user, log_command, save_encrypted_file, load_decrypted_file
-from system_monitor import monitor_cpu_usage, monitor_memory_usage, monitor_disk_usage, suggest_system_optimizations
+from backend.task_scheduler import execute_predefined_command, remove_task, schedule_task
+from backend.ai_prediction import log_user_behavior, predict_next_action
+from backend.hand_tracking import start_hand_tracking_for_buttons
+from backend.user_profiles import update_user_profile, get_user_profile, add_frequent_command, suggest_frequent_commands, clear_user_profile
+from backend.workflow_templates import execute_workflow, add_custom_workflow
+from backend.cross_platform import control_smart_device, sync_task, get_synced_task, get_device_status
+from backend.security import encrypt_data, decrypt_data, authenticate_user, log_command, save_encrypted_file, load_decrypted_file
+from backend.system_monitor import monitor_cpu_usage, monitor_memory_usage, monitor_disk_usage, suggest_system_optimizations
 import logging
 from datetime import datetime
 import threading
+
+import sys
+from PyQt5.QtWidgets import QApplication
+from alvex_interface import ALVEXInterface  # Import the interface
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    ex = ALVEXInterface()  # Launch the interface
+    sys.exit(app.exec_())
 
 app = Flask(__name__)
 
