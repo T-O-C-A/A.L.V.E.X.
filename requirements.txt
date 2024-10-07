@@ -1,0 +1,21 @@
+# GUI and interface
+PyQt5==5.15.4
+
+# Text-to-Speech
+pyttsx3==2.90
+
+# System Monitoring
+psutil==5.8.0
+
+# Speech Recognition
+SpeechRecognition==3.8.1
+PyAudio==0.2.11  # Ensure you install this via a wheel on Windows, if necessary
+
+# Flask (if you're using it for APIs or backend)
+Flask==2.0.1
+
+# YAML parsing for workflows
+PyYAML==5.4.1
+
+# Task scheduling (if needed)
+schedule==1.1.0
