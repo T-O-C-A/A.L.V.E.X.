@@ -86,4 +86,4 @@ sudo certbot --nginx -d ai.mijndomein.com
 ## 🤝 Contributies
 Pull requests zijn welkom! 🚀  
 
-**Auteur:** [Jouw Naam] - 2025
+**Auteur:** Tom - 2025
